@@ -1,25 +1,74 @@
 import {useState} from 'react';
 import Player from '../src/components/Player.jsx';
 import TacBoard from '../src/components/TacBoard.jsx';
+import Log from '../src/components/Log.jsx';
+import { WINNING_COMBINATIONS } from './winning-combination.js';
 
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
+function derivedPlayer (gameTurns) {
+  let currentPlayer = 'X'
+
+  if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
+    currentPlayer = 'O'
+  }
+
+  return currentPlayer;
+}
 
 
 function App() {
-  const [activePlayer, setActivePlayer] = useState('X');
+  const [gameTurns, setGameTurns] = useState([]);
+  const activePlayer = derivedPlayer(gameTurns);
 
-  function handleSelectSquare () {
-    setActivePlayer((currentActivePlayer) =>  currentActivePlayer === 'X' ? 'O' : 'X' )}
+  let gameBoard = initialGameBoard
+
+  for (const turn of gameTurns) {
+
+    const {square, player} = turn;
+    const {row, col} = square;
+
+    gameBoard[row][col] = player;
+
+  }
+
+  let winner = null;
+
+  for (const combination of WINNING_COMBINATIONS) {
+    let firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
+    let secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
+    let thirdSquareSymbol = gameBoard[combination[2].row][combination[2].column];
+
+    if (firstSquareSymbol && firstSquareSymbol === secondSquareSymbol && firstSquareSymbol === thirdSquareSymbol) {
+        winner = firstSquareSymbol
+    }
+  }
+
+  function handleSelectSquare (rowIndex, colIndex) {
+    
+    setGameTurns((prevTurns) => {
+      const currentPlayer = derivedPlayer(prevTurns);
+      const newTurns = [{square: { row: rowIndex, col: colIndex}, player: currentPlayer}, ...prevTurns, ];
+      return newTurns;
+    })
+    
+  }
 
   return ( 
   <main>
     <div id="game-container">
     <ol id="players" className='highlight-player'>
     <Player initialName="player 1" symbol='X' isActive={activePlayer === 'X'}/>
-    <Player initialName="player 1" symbol='O' isActive={activePlayer === 'O'}/>
+    <Player initialName="player 2" symbol='O' isActive={activePlayer === 'O'}/>
     </ol>
-    <TacBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} /> 
+    {winner && <p> Player {winner} won!</p>}
+    <TacBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} board={gameBoard}/> 
     </div>
+    <Log turns={gameTurns}/>
   </main>
   ) 
 }
