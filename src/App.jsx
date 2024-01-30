@@ -3,6 +3,7 @@ import Player from '../src/components/Player.jsx';
 import TacBoard from '../src/components/TacBoard.jsx';
 import Log from '../src/components/Log.jsx';
 import { WINNING_COMBINATIONS } from './winning-combination.js';
+import GameOver from './components/GameOver.jsx';
 
 const initialGameBoard = [
   [null, null, null],
@@ -48,6 +49,8 @@ function App() {
     }
   }
 
+  const hasDraw = gameTurns.length === 9 && !winner
+
   function handleSelectSquare (rowIndex, colIndex) {
     
     setGameTurns((prevTurns) => {
@@ -65,7 +68,7 @@ function App() {
     <Player initialName="player 1" symbol='X' isActive={activePlayer === 'X'}/>
     <Player initialName="player 2" symbol='O' isActive={activePlayer === 'O'}/>
     </ol>
-    {winner && <p> Player {winner} won!</p>}
+    {(winner || hasDraw) && <GameOver winner={winner} />}
     <TacBoard onSelectSquare={handleSelectSquare} activePlayerSymbol={activePlayer} board={gameBoard}/> 
     </div>
     <Log turns={gameTurns}/>
