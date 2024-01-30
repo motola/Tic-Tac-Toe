@@ -1,3 +1,9 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9c0ea80c-a79f-4c37-a4e2-056d0ce191e9/deploy-status)](https://app.netlify.com/sites/steady-speculoos-93d949/deploys)
+
+
+![Tic-Tac-Toe](<public/BG (1).png>)
+![Tic-Tac-Toe](<public/BG (2).png>)
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
